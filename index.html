@@ -72,22 +72,22 @@
 <p>Clone the workshop project repository :</p>
 <pre><code>git clone https://github.com/mlumeau/workshop-kmp.git
 </code></pre>
-<p>Checkout the branch step_two_hellokotlinmp :</p>
+<p>Checkout the branch <code>step_one_setup</code> :</p>
 <pre><code>cd workshop-kmp
-git checkout step_two_hellokotlinmp
+git checkout step_one_setup
 </code></pre>
 <p>This project contain an Android app, a library and an iOS project.</p>
 <h3 is-upgraded>Launch the Android Studio IDE and open the project.</h3>
 <p>The project should sync and you should be able to compile and run the Android application on an emulator or a real device.</p>
 <h3 is-upgraded>Let&#39;s check that it works!</h3>
-<p>You should see something like :<br><img alt="image_caption" src="img/6adc87008ad3b6f0.png"></p>
+<p>You should see a blank screen :<br><img alt="image_caption" src="img/6adc87008ad3b6f0.png"></p>
 <aside class="special"><p>In the project, you can see the kore module which will contain the code for the multiplatform Android/iOS library.</p>
 </aside>
-<h3 is-upgraded>For mac user :</h3>
+<h3 is-upgraded>For Mac users :</h3>
 <p>First you have to prepare the framework for iOS</p>
 <pre><code>./gradlew :kore:packForXCode 
 </code></pre>
-<p>It creates the directory kore/build/xcode-frameworks which contains a gradlew executable and the framework for Xcode.</p>
+<p>It creates the directory <code>kore/build/xcode-frameworks</code> which contains a gradlew executable and the framework for Xcode.</p>
 <p>Now install the pods :</p>
 <pre><code>cd iosApp/kosmos
 pod install
@@ -100,16 +100,17 @@ rm Podfile.lock
 pod install
 </code></pre>
 <h3 is-upgraded>Now you can open the project in Xcode</h3>
-<p>by clicking on ../workshop-kmp/iosApp/kosmos/kosmos.xcworkspace</p>
-<p>You can compile and run the project on an iOS emulator :<br><img alt="image_caption" src="img/56d554d56953538c.png"></p>
+<p>by opening the workspace file : <code>../workshop-kmp/iosApp/kosmos/kosmos.xcworkspace</code></p>
+<p>You can now compile and run the project on an iOS emulator or on a real device.</p>
+<p>You should see a blank screen :<br><img alt="image_caption" src="img/56d554d56953538c.png"></p>
 <h3 is-upgraded>If everything&#39;s fine, let&#39;s go to the second step !!!</h3>
 
 
       </google-codelab-step>
     
-      <google-codelab-step label="STEP TWO - A very basic KMP project" duration="10">
+      <google-codelab-step label="STEP TWO - A very basic KMP project" duration="12">
         <h3 is-upgraded>In this step, you will implement your first multiplatform code !</h3>
-<p>First add this code in the common directory : kore/src/commonMain/kotlin/xyz/mlumeau/kosmos/kore/common.kt</p>
+<p>First add this code in the common directory : <code>kore/src/commonMain/kotlin/xyz/mlumeau/kosmos/kore/common.kt</code></p>
 <pre><code>package xyz.mlumeau.kosmos.kore
 
 expect fun platformName(): String
@@ -118,19 +119,19 @@ fun createApplicationScreenMessage(): String {
     return &#34;Kotlin Rocks on ${platformName()}&#34;
 }
 </code></pre>
-<aside class="special"><p>The keyword ‘expect&#39; means that you have to implement these function in the specific code.</p>
+<aside class="special"><p>The keyword <code>expect</code> means that you have to implement these function in the specific code (the <code>actual</code> code).</p>
 </aside>
-<p>Now edit the android directory : workshop-kmp/kore/src/androidMain/kotlin/xyz/mlumeau/kosmos/kore/actual.kt</p>
+<p>Now edit the android directory : <code>workshop-kmp/kore/src/androidMain/kotlin/xyz/mlumeau/kosmos/kore/actual.kt</code></p>
 <pre><code>package xyz.mlumeau.kosmos.kore
 
 actual fun platformName(): String {
     return &#34;Android&#34;
 }
 </code></pre>
-<aside class="special"><p>The keyword ‘actual&#39; corresponds to the ‘expect&#39; in the specific code.</p>
+<aside class="special"><p>The keyword <code>actual</code> corresponds to the <code>expect</code> in the specific code.</p>
 </aside>
 <p>In the Android main project &#34;androidApp&#34;, update the MainActivity :</p>
-<p>Add a TextView in res/layout/activity_main.xml</p>
+<p>Add a TextView in <code>res/layout/activity_main.xml</code></p>
 <pre><code>&lt;?xml version=&#34;1.0&#34; encoding=&#34;utf-8&#34;?&gt;
 
 &lt;RelativeLayout xmlns:android=&#34;http://schemas.android.com/apk/res/android&#34;
@@ -148,7 +149,7 @@ actual fun platformName(): String {
 
 &lt;/RelativeLayout&gt;
 </code></pre>
-<p>Handle this textview in java/xyz.mlumeau.kosmos.views/MainActivity (Kotlin file)</p>
+<p>Handle this textview in <code>java/xyz.mlumeau.kosmos.views/MainActivity</code> (Kotlin file)</p>
 <pre><code>package xyz.mlumeau.kosmos.views
 
 import android.os.Bundle
@@ -167,8 +168,8 @@ class MainActivity : AppCompatActivity() {
 }
 </code></pre>
 <p>Run it and you should see :<br><img alt="image_caption" src="img/a761533ae237d64a.png"></p>
-<h2 is-upgraded>For mac user :</h2>
-<p>Now edit the iOS directory : workshop-kmp/kore/src/iosMain/kotlin/xyz/mlumeau/kosmos/kore/actual.kt</p>
+<h3 is-upgraded>For Mac users :</h3>
+<p>Now edit the iOS directory : <code>workshop-kmp/kore/src/iosMain/kotlin/xyz/mlumeau/kosmos/kore/actual.kt</code></p>
 <pre><code>package xyz.mlumeau.kosmos.kore
 
 import platform.UIKit.UIDevice
@@ -202,15 +203,15 @@ class MainViewController: UIViewController {
 }
 
 </code></pre>
-<p>You can compile and run the project on an iOS emulator :<br><img alt="image_caption" src="img/3ad1739a7b43816a.png"></p>
+<p>You can now compile and run the project on an iOS emulator or on a real device.<br><img alt="image_caption" src="img/3ad1739a7b43816a.png"></p>
 <h3 is-upgraded>If everything&#39;s fine, let&#39;s go to the step 3 !!!</h3>
 
 
       </google-codelab-step>
     
-      <google-codelab-step label="STEP THREE - Let&#39;s show something" duration="10">
+      <google-codelab-step label="STEP THREE - Let&#39;s show something" duration="20">
         <h3 is-upgraded>In this step, you will implement a local repository to simulate a call to the Nasa API APOD - &#34;Astronomy Picture Of the Day&#34; !</h3>
-<p>First create a common Model : kore/src/commonMain/kotlin/xyz/mlumeau/kosmos/kore/model/APOD.kt</p>
+<p>First create a common Model : <code>kore/src/commonMain/kotlin/xyz/mlumeau/kosmos/kore/model/APOD.kt</code></p>
 <pre><code>package xyz.mlumeau.kosmos.kore.model
 
 import kotlinx.serialization.Optional
@@ -224,17 +225,17 @@ data class APOD(
     @Optional val url: String? = null
 )
 </code></pre>
-<p>Now the repository cache interface : .../kore/data/APODRepositoryCache.kt</p>
+<p>Now the repository cache interface : <code>.../kore/data/APODRepositoryCache.kt</code></p>
 <pre><code>package xyz.mlumeau.kosmos.kore.data
 
-import xyz.mlumeau.kosmos.kore.APOD
+import xyz.mlumeau.kosmos.kore.model.APOD
 
 interface APODRepositoryCache {
     suspend fun getAPOD(): APOD?
     fun getAPOD(completion: (APOD) -&gt; Unit, failure: () -&gt; Unit)
 }
 </code></pre>
-<p>And the implementation : .../kore/data/APODRepositoryCache.kt</p>
+<p>And the implementation : <code>.../kore/data/APODRepositoryCacheImpl.kt</code></p>
 <pre><code>package xyz.mlumeau.kosmos.kore.data
 
 import kotlinx.serialization.json.Json
@@ -255,7 +256,7 @@ class APODRepositoryCacheImpl : APODRepositoryCache {
     }
 }
 </code></pre>
-<p>Update the common file : .../kore/common.kt</p>
+<p>Update the common file : <code>.../kore/common.kt</code></p>
 <pre><code>package xyz.mlumeau.kosmos.kore
 
 import xyz.mlumeau.kosmos.kore.data.APODRepositoryCacheImpl
@@ -277,7 +278,7 @@ expect fun requestAPOD(
     failure: () -&gt; Unit
 )
 </code></pre>
-<p>Now edit the android directory : workshop-kmp/kore/src/androidMain/kotlin/xyz/mlumeau/kosmos/kore/actual.kt</p>
+<p>Now edit the android directory : <code>workshop-kmp/kore/src/androidMain/kotlin/xyz/mlumeau/kosmos/kore/actual.kt</code></p>
 <pre><code>package xyz.mlumeau.kosmos.kore
 
 import xyz.mlumeau.kosmos.kore.data.APODRepositoryCacheImpl
@@ -295,7 +296,7 @@ actual fun requestAPOD(
 }
 </code></pre>
 <p>In the Android main project &#34;androidApp&#34;, update the MainActivity :</p>
-<p>Remove the TextView and add an Image, a title, a text and a progressbar in res/layout/activity_main.xml</p>
+<p>Remove the TextView and add an Image, a title, a text and a progressbar in <code>res/layout/activity_main.xml</code></p>
 <pre><code>&lt;?xml version=&#34;1.0&#34; encoding=&#34;utf-8&#34;?&gt;
 
 &lt;RelativeLayout
@@ -353,7 +354,7 @@ actual fun requestAPOD(
 
 &lt;/RelativeLayout&gt;
 </code></pre>
-<p>Handle these views in java/xyz.mlumeau.kosmos.views/MainActivity (Kotlin file)</p>
+<p>Handle these views in <code>java/xyz.mlumeau.kosmos.views/MainActivity</code> (Kotlin file)</p>
 <pre><code>package xyz.mlumeau.kosmos.views
 
 import android.os.Bundle
@@ -366,7 +367,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import xyz.mlumeau.kosmos.R
-import xyz.mlumeau.kosmos.kore.APOD
+import xyz.mlumeau.kosmos.kore.model.APOD
 import xyz.mlumeau.kosmos.kore.createApplicationScreenMessage
 import xyz.mlumeau.kosmos.kore.data.APODRepositoryCache
 import xyz.mlumeau.kosmos.kore.data.APODRepositoryCacheImpl
@@ -406,8 +407,8 @@ class MainActivity : AppCompatActivity() {
 }
 </code></pre>
 <p>Run it and you should see :<br><img alt="image_caption" src="img/3caccf69e2656ac6.png"></p>
-<h2 is-upgraded>For mac user :</h2>
-<p>Now edit the iOS directory by creating a &#34;dispatchers&#34; file : workshop-kmp/kore/src/iosMain/kotlin/xyz/mlumeau/kosmos/kore/dispatchers.kt</p>
+<h3 is-upgraded>For Mac users :</h3>
+<p>Now edit the iOS directory by creating a &#34;dispatchers&#34; file : <code>workshop-kmp/kore/src/iosMain/kotlin/xyz/mlumeau/kosmos/kore/dispatchers.kt</code></p>
 <pre><code>package xyz.mlumeau.kosmos.kore
 
 import kotlinx.coroutines.CoroutineDispatcher
@@ -440,7 +441,7 @@ internal abstract class Scope(
 internal class MainScope : Scope(MainDispatcher())
 </code></pre>
 <p>// TODO : Explain this dispatcher in iOS context...</p>
-<p>Now edit the iOS actual file : workshop-kmp/kore/src/iosMain/kotlin/xyz/mlumeau/kosmos/kore/actual.kt</p>
+<p>Now edit the iOS actual file : <code>workshop-kmp/kore/src/iosMain/kotlin/xyz/mlumeau/kosmos/kore/actual.kt</code></p>
 <pre><code>package xyz.mlumeau.kosmos.kore
 
 import kotlinx.coroutines.launch
@@ -476,7 +477,7 @@ actual fun requestAPOD(
 </code></pre>
 <p>Back to Xcode !</p>
 <p>If you are familiar with Storyboard, add the progressbar, UIImageView and another textview for description in the MainView (see picture below) and add references to the MainViewController.<br><img alt="image_caption" src="img/b4fb544c213212b6.png"><br>If you prefer, download the <a href="https://github.com/mlumeau/workshop-kmp/blob/step_four_remoterepository/iosApp/kosmos/kosmos/Base.lproj/Main.storyboard" target="_blank">storyboard from the next step</a>.</p>
-<p>And then update the MainViewController code...</p>
+<p>And then update the <code>MainViewController</code> code...</p>
 <pre><code>import UIKit
 import Nuke
 import kore
@@ -529,8 +530,340 @@ private extension MainViewController {
     func onLoadingError() {}
 }
 </code></pre>
-<p>You can compile and run the project on an iOS emulator :<br><img alt="image_caption" src="img/e0141634d78c0ad9.png"></p>
+<p>You can now compile and run the project on an iOS emulator or on a real device.<br><img alt="image_caption" src="img/e0141634d78c0ad9.png"></p>
 <h3 is-upgraded>If everything&#39;s fine, let&#39;s go to the step 4 !!!</h3>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="STEP FOUR - Call the remote API" duration="15">
+        <h3 is-upgraded>In this step, you will implement a remote repository to call the Nasa API APOD - &#34;Astronomy Picture Of the Day&#34; !</h3>
+<p>First create the Nasa API service interface : <code>.../kore/service/nasa/NasaApi.kt</code></p>
+<pre><code>package xyz.mlumeau.kosmos.kore.service.nasa
+
+import xyz.mlumeau.kosmos.kore.APOD
+
+internal interface NasaApi {
+    suspend fun getAPOD(): APOD?
+}
+</code></pre>
+<p>And the implementation : <code>.../kore/service/nasa/NasaApiRemote.kt</code></p>
+<pre><code>package xyz.mlumeau.kosmos.kore
+
+import io.ktor.client.HttpClient
+import io.ktor.client.call.call
+import io.ktor.client.response.readText
+import io.ktor.http.HttpMethod
+import kotlinx.serialization.json.Json
+import xyz.mlumeau.kosmos.kore.service.nasa.NasaApi
+
+
+internal class NasaAPIRemote(
+    private val client: HttpClient = HttpClient()
+) : NasaApi {
+
+    private suspend fun request(urlString: String): String {
+        return client.call(urlString) {
+            method = HttpMethod.Get
+        }.response.readText()
+    }
+
+    private suspend fun requestAPOD() : APOD {
+        val result = request(APOD_URL)
+
+        return Json.nonstrict.parse(APOD.serializer(), result)
+    }
+
+    override suspend fun getAPOD(): APOD = requestAPOD()
+
+    companion object {
+        const val APOD_URL = &#34;https://api.nasa.gov/planetary/apod?&amp;api_key=DEMO_KEY&#34;
+    }
+}
+</code></pre>
+<p>Now create the remote repository interface : <code>.../kore/data/APODRepositoryRemote.kt</code></p>
+<pre><code>package xyz.mlumeau.kosmos.kore.data
+
+import xyz.mlumeau.kosmos.kore.model.APOD
+
+interface APODRepositoryRemote {
+    suspend fun getAPOD(): APOD?
+    fun getAPOD(completion: (APOD) -&gt; Unit, failure: () -&gt; Unit)
+}
+</code></pre>
+<p>And the implementation : <code>.../kore/data/APODRepositoryRemoteImpl.kt</code></p>
+<pre><code>package xyz.mlumeau.kosmos.kore.data
+
+import xyz.mlumeau.kosmos.kore.model.APOD
+import xyz.mlumeau.kosmos.kore.NasaAPIRemote
+import xyz.mlumeau.kosmos.kore.requestAPOD
+import xyz.mlumeau.kosmos.kore.service.nasa.NasaApi
+
+class APODRepositoryRemoteImpl : APODRepositoryRemote {
+    private val nasaAPI: NasaApi = NasaAPIRemote()
+
+    override suspend fun getAPOD() = nasaAPI.getAPOD()
+
+    override fun getAPOD(completion: (APOD) -&gt; Unit, failure: () -&gt; Unit) {
+        requestAPOD(this, completion, failure)
+    }
+}
+</code></pre>
+<p>Update the common file : <code>.../kore/common.kt</code><br>Add a new function requestApod with a APODRepositoryRemoteImpl parameter.<br>Do not remove the other requestApod function !</p>
+<pre><code>package xyz.mlumeau.kosmos.kore
+
+...
+import xyz.mlumeau.kosmos.kore.data.APODRepositoryRemoteImpl
+
+...
+expect fun requestAPOD(
+    apodRepositoryRemote: APODRepositoryRemoteImpl,
+    completion: (APOD) -&gt; Unit,
+    failure: () -&gt; Unit
+)
+</code></pre>
+<p>Now edit the android directory : <code>workshop-kmp/kore/src/androidMain/kotlin/xyz/mlumeau/kosmos/kore/actual.kt</code><br>Add a new function requestApod with a APODRepositoryRemoteImpl parameter.<br>Do not remove the other requestApod function !</p>
+<pre><code>package xyz.mlumeau.kosmos.kore
+
+...
+import xyz.mlumeau.kosmos.kore.data.APODRepositoryRemoteImpl
+
+...
+actual fun requestAPOD(
+    apodRepositoryRemote: APODRepositoryRemoteImpl,
+    completion: (APOD) -&gt; Unit,
+    failure: () -&gt; Unit
+) {
+    TODO(&#34;The Android app must use the suspend function instead.&#34;)
+}
+</code></pre>
+<p>In the Android main project &#34;androidApp&#34;, update the <code>java/xyz.mlumeau.kosmos.views/MainActivity</code> (Kotlin file) by replacing the Cache repository with Remote Repository :</p>
+<pre><code>...
+import xyz.mlumeau.kosmos.kore.data.APODRepositoryRemote
+import xyz.mlumeau.kosmos.kore.data.APODRepositoryRemoteImpl
+
+class MainActivity : AppCompatActivity() {
+
+    private val apodRepository: APODRepositoryRemote = APODRepositoryRemoteImpl()
+...
+</code></pre>
+<p>Run it and you should see a new picture : the Astronomy picture of the day !<br>Take some time to celebrate !!!</p>
+<h3 is-upgraded>For Mac users :</h3>
+<p>Now edit the iOS actual file : <code>workshop-kmp/kore/src/iosMain/kotlin/xyz/mlumeau/kosmos/kore/actual.kt</code><br>Add a requestAPOD function for Remote Repository.</p>
+<pre><code>package xyz.mlumeau.kosmos.kore
+
+...
+import kotlinx.coroutines.CoroutineScope
+import xyz.mlumeau.kosmos.kore.data.APODRepositoryRemoteImpl
+
+...
+fun getNetworkScope() = MainScope() as CoroutineScope
+
+actual fun requestAPOD(
+    apodRepositoryRemote: APODRepositoryRemoteImpl,
+    completion: (APOD) -&gt; Unit,
+    failure: () -&gt; Unit
+) {
+    getNetworkScope().launch {
+        val apod = apodRepositoryRemote.getAPOD()
+        if (apod != null) {
+            completion(apod)
+        } else {
+            failure()
+        }
+    }
+}
+</code></pre>
+<p>Back to Xcode !</p>
+<p>Update the <code>MainViewController</code> code by replacing the Cache Repository by a Remote Repository :</p>
+<pre><code>...
+class MainViewController: UIViewController {
+
+    ...
+    private let apodRepository: APODRepositoryRemote = APODRepositoryRemoteImpl()
+ 
+</code></pre>
+<p>You can now compile and run the project on an iOS emulator or on a real device to see the new picture of the day !<br>iOS celebration time !!!</p>
+<h3 is-upgraded>If everything&#39;s fine, let&#39;s go to the step 5 !!!</h3>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="STEP FIVE - Architecture" duration="15">
+        <h3 is-upgraded>In this step, you will implement a better architecture in native apps !</h3>
+<p>Nothing to do in the Kore library this time !</p>
+<p>In the Android main project &#34;androidApp&#34;, create a viewmodels directory.</p>
+<p>Add a new class : <code>.../viewmodels/APODViewModel.kt</code></p>
+<pre><code>package xyz.mlumeau.kosmos.viewmodels
+
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import xyz.mlumeau.kosmos.kore.model.APOD
+import xyz.mlumeau.kosmos.kore.data.APODRepositoryRemote
+
+class APODViewModel(
+    private val apodRepository: APODRepositoryRemote
+) : ScopedViewModel() {
+
+    private var job: Job? = null
+
+    private val _apod = MutableLiveData&lt;APOD&gt;()
+    val apod: LiveData&lt;APOD&gt;
+        get() = _apod
+
+    init {
+        startLoadingData()
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        job?.cancel()
+    }
+
+    private fun startLoadingData() {
+        launch {
+            apodRepository.getAPOD()?.let { apod -&gt;
+                withContext(Dispatchers.Main) {
+                    _apod.value = apod
+                }
+            }
+        }
+    }
+}
+</code></pre>
+<p>Add a factory : <code>.../viewmodels/APODViewModelFactory.kt</code></p>
+<pre><code>package xyz.mlumeau.kosmos.viewmodels
+
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import xyz.mlumeau.kosmos.kore.data.APODRepositoryRemoteImpl
+
+class APODViewModelFactory : ViewModelProvider.Factory {
+
+    @Suppress(&#34;UNCHECKED_CAST&#34;)
+    override fun &lt;T : ViewModel&gt; create(modelClass: Class&lt;T&gt;): T {
+        require(modelClass == APODViewModel::class.java) { &#34;Unknown ViewModel class&#34; }
+        return APODViewModel(
+            APODRepositoryRemoteImpl()
+        ) as T
+    }
+}
+</code></pre>
+<p>And a Scopped view model : <code>.../viewmodels/ScopedViewModel.kt</code></p>
+<pre><code>package xyz.mlumeau.kosmos.viewmodels
+
+import androidx.lifecycle.ViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlin.coroutines.CoroutineContext
+
+abstract class ScopedViewModel : ViewModel(),
+    CoroutineScope {
+    private val job = Job()
+    val parentJob: Job
+        get() = job
+
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.Main + job
+
+    override fun onCleared() {
+        super.onCleared()
+        parentJob.cancel()
+    }
+}
+</code></pre>
+<p>update the <code>java/xyz.mlumeau.kosmos.views/MainActivity</code> (Kotlin file) by replacing the getApod() function with a call to the ViewModel  :</p>
+<pre><code>...
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
+import xyz.mlumeau.kosmos.viewmodels.APODViewModel
+import xyz.mlumeau.kosmos.viewmodels.APODViewModelFactory
+
+class MainActivity : AppCompatActivity() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+        title_tv.text = createApplicationScreenMessage()
+
+        // getApod()
+        val model =
+            ViewModelProviders.of(this, APODViewModelFactory())[APODViewModel::class.java]
+        model.apod.observe(this, Observer { apod -&gt; updateAPODData(apod) })
+    }
+</code></pre>
+<p>The function getApod() can be removed.</p>
+<p>Run it to validate the new architecture.</p>
+<h3 is-upgraded>For Mac users :</h3>
+<p>Back to Xcode !</p>
+<p>Create a ViewModels directory.</p>
+<p>Add a new class : <code>.../ViewModels/MainViewModel.kt</code></p>
+<pre><code>import Foundation
+import kore
+
+final class MainViewModel {
+    private let apodRepository: APODRepositoryRemote = APODRepositoryRemoteImpl()
+    var apod: APOD? = nil
+    var onAPODLoaded: ((APOD) -&gt; ())? = nil
+    var onLoadingError: (() -&gt; ())? = nil
+    
+    init() {
+        startLoadingData()
+    }
+    
+    private func startLoadingData() {
+        apodRepository.getAPOD(completion: { apod in
+            self.apod = apod
+            self.onAPODLoaded?(apod)
+            return .init()
+        }, failure: { () in
+            self.onLoadingError?()
+            return .init()
+        })
+    }
+}
+</code></pre>
+<p>Update the <code>MainViewController</code> code by replacing the Repository by the View Model :</p>
+<pre><code>...
+    // private let apodRepository: APODRepositoryRemote = APODRepositoryRemoteImpl()
+    let viewModel = MainViewModel()
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        // startLoadingData()
+        configureUI()
+        configureBinding()
+    }
+ 
+ ...
+
+ private extension MainViewController {
+    
+//    private func startLoadingData() {
+//        apodRepository.getAPOD(completion: { apod in
+//            self.updateAPODData(apod: apod)
+//            return .init()
+//        }, failure: { () in
+//            self.onLoadingError()
+//            return .init()
+//        })
+//    }
+    func configureUI() {
+    }
+    
+    func configureBinding() {
+        viewModel.onAPODLoaded = updateAPODData
+        viewModel.onLoadingError = onLoadingError
+    }
+...
+</code></pre>
+<p>You can now compile and run the project to validate the architecture updates !</p>
+<h3 is-upgraded>If everything&#39;s fine, let&#39;s go to the step 6 !!!</h3>
 
 
       </google-codelab-step>
