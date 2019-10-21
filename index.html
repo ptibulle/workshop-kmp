@@ -258,7 +258,7 @@ class APODRepositoryCacheImpl : APODRepositoryCache {
 <pre><code>package xyz.mlumeau.kosmos.kore
 
 import xyz.mlumeau.kosmos.kore.data.APODRepositoryCacheImpl
-
+import xyz.mlumeau.kosmos.kore.model.APOD
 
 expect fun platformName(): String
 
@@ -276,6 +276,7 @@ expect fun requestAPOD(
 <pre><code>package xyz.mlumeau.kosmos.kore
 
 import xyz.mlumeau.kosmos.kore.data.APODRepositoryCacheImpl
+import xyz.mlumeau.kosmos.kore.model.APOD
 
 actual fun platformName(): String {
     return &#34;Android&#34;
@@ -442,6 +443,7 @@ internal class MainScope : Scope(MainDispatcher())
 import kotlinx.coroutines.launch
 import platform.UIKit.UIDevice
 import xyz.mlumeau.kosmos.kore.data.APODRepositoryCacheImpl
+import xyz.mlumeau.kosmos.kore.model.APOD
 
 actual fun platformName(): String {
     return UIDevice.currentDevice.systemName() +
