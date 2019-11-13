@@ -27,8 +27,8 @@
                   environment="web"
                   feedback-link="https://github.com/RobinCaroff/workshop-kmp">
     
-      <google-codelab-step label="CodeLab Overview" duration="2">
-        <h3 is-upgraded>Sharing Kotlin code between iOS and Android</h3>
+      <google-codelab-step label="STEP ONE - CodeLab Overview and Settings" duration="16">
+        <h2 is-upgraded>Sharing Kotlin code between iOS and Android</h2>
 <p>In this codelab you will create an iOS and Android application, by making use of Kotlin&#39;s code sharing features.<br>For Android you&#39;ll be using Kotlin/JVM, while for iOS it will be Kotlin/Native.</p>
 <p>This codelab will show you the ability to share code within Kotlin and the benefits it provides. While what we&#39;ll be looking at is a simplified application, what is shown here can be applied to real world applications, independent of their size or complexity.</p>
 <p>You will learn how to:</p>
@@ -51,12 +51,8 @@
 </ul>
 <aside class="special"><p>This codelab is inspired by the Jetbrains <a href="https://kotlinlang.org/docs/tutorials/native/mpp-ios-android.html" target="_blank">tutorial</a> for the first steps. The jetbrains codelab is more detailled on the initial configuration of the project and has very interesting focus on the gradle files.</p>
 </aside>
-
-
-      </google-codelab-step>
-    
-      <google-codelab-step label="Environment Setup" duration="4">
-        <p>You need <a href="https://developer.android.com/studio/" target="_blank">Android Studio</a> 3.4+ for the Android part of the tutorial.</p>
+<h2 is-upgraded>Environment Setup</h2>
+<p>You need <a href="https://developer.android.com/studio/" target="_blank">Android Studio</a> 3.4+ for the Android part of the tutorial.</p>
 <aside class="warning"><p>⚠️ Kotlin MPP is broken with 3.5.1. Please use 3.5.0 or 3.6 preview releases ⚠️</p>
 </aside>
 <aside class="special"><p>You can also use <a href="https://jetbrains.com/idea/" target="_blank">IntelliJ IDEA</a> Community or Ultimate edition.</p>
@@ -65,12 +61,8 @@
 <p>For the iOS part of the tutorial, you need a macOS 10.14+ host with Xcode 10.3+ and the tools installed and configured.</p>
 <aside class="warning"><p>If you don&#39;t fill in the requirements at least for the Android part, please consider pair programming !!!</p>
 </aside>
-
-
-      </google-codelab-step>
-    
-      <google-codelab-step label="STEP ONE - Initialize the project" duration="10">
-        <h3 is-upgraded>In this step, we check that everything is well configured !</h3>
+<h2 is-upgraded>Initialize the project</h2>
+<h3 is-upgraded>Let&#39;s check that everything is well configured !</h3>
 <p>Clone the workshop project repository :</p>
 <pre><code>git clone https://github.com/mlumeau/workshop-kmp.git
 </code></pre>
@@ -230,7 +222,7 @@ interface APODRepositoryCache {
     fun getAPOD(completion: (APOD) -&gt; Unit, failure: () -&gt; Unit)
 }
 </code></pre>
-<p>Notice that we create to methods with the same purpose.</p>
+<p>Notice that we create two methods with the same purpose.</p>
 <aside class="special"><p>The <code>suspend</code> keyword is not supported in Swift. As we are going to take advantage of coroutines, the Android app will call the <code>suspend</code> method but the iOS one will call the regular method with a callback system.</p>
 </aside>
 <p>And the implementation : <code>.../kore/data/APODRepositoryCacheImpl.kt</code> which contains the APOD stub in its companion object.</p>
@@ -873,7 +865,7 @@ final class MainViewModel {
 <aside class="special"><p>The <code>GetAPOD</code> use case will handle the logic of choosing between the remote and the cache repository based on whether or not an internet connection is available.</p>
 </aside>
 <p>First create a usecase GetAPOD : <code>.../kore/usecases/GetAPOD.kt</code></p>
-<pre><code>package xyz.mlumeau.kosmos.usecases
+<pre><code>package xyz.mlumeau.kosmos.kore.usecases
 
 import xyz.mlumeau.kosmos.kore.model.APOD
 
@@ -899,7 +891,7 @@ import xyz.mlumeau.kosmos.kore.data.APODRepositoryRemote
 import xyz.mlumeau.kosmos.kore.data.APODRepositoryRemoteImpl
 import xyz.mlumeau.kosmos.kore.requestAPOD
 import xyz.mlumeau.kosmos.kore.usecases.GetConnectionState
-import xyz.mlumeau.kosmos.usecases.GetAPOD
+import xyz.mlumeau.kosmos.kore.usecases.GetAPOD
 
 class GetAPODImpl(private val getConnectionState: GetConnectionState) : GetAPOD {
 
@@ -911,34 +903,6 @@ class GetAPODImpl(private val getConnectionState: GetConnectionState) : GetAPOD 
     } else {
         apodRepositoryCache.getAPOD()
     }
-
-    override fun getAPOD(completion: (APOD) -&gt; Unit, failure: () -&gt; Unit) {
-        requestAPOD(this, completion, failure)
-    }
-}
-</code></pre>
-<p>Now create the remote repository interface : <code>.../kore/data/APODRepositoryRemote.kt</code></p>
-<pre><code>package xyz.mlumeau.kosmos.kore.data
-
-import xyz.mlumeau.kosmos.kore.model.APOD
-
-interface APODRepositoryRemote {
-    suspend fun getAPOD(): APOD?
-    fun getAPOD(completion: (APOD) -&gt; Unit, failure: () -&gt; Unit)
-}
-</code></pre>
-<p>and the implementation : <code>.../kore/data/APODRepositoryRemoteImpl.kt</code></p>
-<pre><code>package xyz.mlumeau.kosmos.kore.data
-
-import xyz.mlumeau.kosmos.kore.model.APOD
-import xyz.mlumeau.kosmos.kore.NasaAPIRemote
-import xyz.mlumeau.kosmos.kore.requestAPOD
-import xyz.mlumeau.kosmos.kore.service.nasa.NasaApi
-
-class APODRepositoryRemoteImpl : APODRepositoryRemote {
-    private val nasaAPI: NasaApi = NasaAPIRemote()
-
-    override suspend fun getAPOD() = nasaAPI.getAPOD()
 
     override fun getAPOD(completion: (APOD) -&gt; Unit, failure: () -&gt; Unit) {
         requestAPOD(this, completion, failure)
@@ -1025,7 +989,7 @@ class GetConnectionStateAndroid(
 <p>Update the viewmodel : <code>.../viewmodels/APODViewModel.kt</code></p>
 <pre><code>...
 // import xyz.mlumeau.kosmos.kore.data.APODRepositoryRemote
-import xyz.mlumeau.kosmos.usecases.GetAPOD
+import xyz.mlumeau.kosmos.kore.usecases.GetAPOD
 
 class APODViewModel(
     // private val apodRepository: APODRepositoryRemote
@@ -1054,7 +1018,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import xyz.mlumeau.kosmos.kore.usecases.GetConnectionState
 import xyz.mlumeau.kosmos.kore.usecases.implementations.GetAPODImpl
-import xyz.mlumeau.kosmos.usecases.GetConnectionStateAndroid
+import xyz.mlumeau.kosmos.kore.usecases.GetConnectionStateAndroid
 
 class APODViewModelFactory(
     private val context: Context
@@ -1199,7 +1163,7 @@ final class MainViewModel {
 <p>Let&#39;s think about some improvements we can make to this app.</p>
 <p>How about improving the <code>GetAPOD</code> use case with a cache management? New APOD data is available every day. Knowing this there is no point making multiple requests to the NASA&#39;s API during the same day. We could then have a cache system which stores the APOD data with an associated time. The <code>APODRepositoryCache</code> will then be able to serve this persisted data and provide information about its expiration. The <code>GetAPOD</code> use case will then be able to decide whether it should use the <code>APODRepositoryCache</code> if cached data is available and not expired or the <code>APODRepositoryRemote</code> to get fresh data.</p>
 <p>Let&#39;s modify the <code>APODRepositoryCache</code> interface (<code>xyz.mlumeau.kosmos.kore.data.APODRepositoryCache</code>) and add two methods:</p>
-<pre><code>package xyz.mlumeau.kosmos.usecases
+<pre><code>package xyz.mlumeau.kosmos.kore.usecases
 
 import xyz.mlumeau.kosmos.kore.model.APOD
 
