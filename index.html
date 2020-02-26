@@ -93,11 +93,12 @@ git checkout step_one_setup
     
       <google-codelab-step label="STEP TWO - A very basic KMP project" duration="12">
         <h3 is-upgraded>In this step, you will implement your first multiplatform code !</h3>
-<p>The goal of this step is to define a common method which creates a greetings text and adds spécific implementations for iOS and Android in the Kotlin common code.</p>
+<p>The goal of this step is to define a common method which creates a greetings text and adds specific implementations for iOS and Android in the Kotlin common code.</p>
 <p>As a result, we will creates an Android module and an iOS framework both exposing the same method <code>createApplicationScreenMessage</code> but having different implementation.</p>
 <aside class="special"><p>You may have to switch the type of View in the Android Studio Explorer during the codelab : <strong>Project</strong> View for editing the Kore Library <strong>Android</strong> View for editing the Android App</p>
 </aside>
-<p>First add this code in the common directory of the kore library : <code>kore/src/commonMain/kotlin/xyz/mlumeau/kosmos/kore/common.kt</code> IMPORTANT : Don&#39;t forget to switch to the <strong>Project</strong> View !!!</p>
+<p>First add this code in the common directory of the kore library : <code>kore/src/commonMain/kotlin/xyz/mlumeau/kosmos/kore/common.kt</code></p>
+<p>⚠️ IMPORTANT : Don&#39;t forget to switch to the <strong>Project</strong> View !!!</p>
 <pre><code>package xyz.mlumeau.kosmos.kore
 
 expect fun platformName(): String
@@ -213,7 +214,7 @@ data class APOD(
     val url: String? = null
 )
 </code></pre>
-<p>Update the common file : <code>.../kore/common.kt</code> (You can remove the plaform example...)</p>
+<p>Update the common file : <code>.../kore/common.kt</code> (You can remove the plaftorm example...)</p>
 <pre><code>package xyz.mlumeau.kosmos.kore
 
 import kotlinx.coroutines.CoroutineDispatcher
@@ -232,7 +233,7 @@ internal abstract class Scope(
         get() = dispatcher + job
 }
 </code></pre>
-<aside class="special"><p>The <code>Coroutines</code> are supported differently on Android (kotlin) and iOS (Swift). As we are going to take advantage of coroutines, the Android and the iOS parts of the kore library will implement different solution.</p>
+<aside class="special"><p>In the common code we are going to use the Kotlin <code>Coroutines</code> in order to handle multi-tasking. However coroutines are not currently supported in Swift for that reason, we chose to use coroutines only inside the common Kotlin project (internaly) and we only expose methods with direct results or ones that take callbacks as parameters. As Android and iOS will not provide the same coroutines dispatchers, both project will have to provide their own CoroutineScope to execute coroutines.</p>
 </aside>
 <p>Now create the repository cache interface : <code>.../kore/data/APODRepositoryCache.kt</code></p>
 <pre><code>package xyz.mlumeau.kosmos.kore.data
@@ -243,6 +244,7 @@ interface APODRepositoryCache {
     fun getAPOD(completion: (APOD) -&gt; Unit, failure: () -&gt; Unit)
 }
 </code></pre>
+<p>This interface offers a way to retrieve APOD data and takes a completion and a failure callbacks as parameters to return the resutl.</p>
 <p>And finally the repository cache implementation : <code>.../kore/data/APODRepositoryCacheImpl.kt</code> which contains the APOD stub in its companion object.</p>
 <pre><code>package xyz.mlumeau.kosmos.kore.data
 
@@ -289,7 +291,7 @@ internal actual val coroutineScope = IOScope() as CoroutineScope
 
 internal class IOScope : Scope(Dispatchers.IO) 
 </code></pre>
-<aside class="special"><p>The <code>Coroutine</code> implementation for Android is basic.</p>
+<aside class="special"><p>For the Android project we use the IO dispatcher to execute the coroutines. The Dispatcher is ideal for short background work.</p>
 </aside>
 <p>Now that we have a data model and a repository to provide it, we will create the user interface to display the data content.</p>
 <p>Let&#39;s start with the Android application. In the Android main project &#34;androidApp&#34;, update the MainActivity :</p>
@@ -401,6 +403,8 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope() {
     }
 }
 </code></pre>
+<aside class="special"><p>Notice that the getAPOD completion callback will be called from a background thread. This is why we need to encapsulate view updates in a <code>runOnUiThread</code> block.</p>
+</aside>
 <p>Run it and you should see : <img alt="image_caption" src="img/3caccf69e2656ac6.png"></p>
 <p>Now edit the iOS part of the library : <code>workshop-kmp/kore/src/iosMain/kotlin/xyz/mlumeau/kosmos/kore/actual.kt</code></p>
 <pre><code>package xyz.mlumeau.kosmos.kore
@@ -428,7 +432,9 @@ internal actual val coroutineScope = MainScope() as CoroutineScope
 </aside>
 <h3 is-upgraded>For Mac users :</h3>
 <p>Back to Xcode ! We will now create the user interface for the iOS application.</p>
-<p>If you are familiar with Storyboard, add the progressbar, UIImageView and another textview for description in the MainView (see picture below) and add references to the MainViewController. <img alt="image_caption" src="img/b4fb544c213212b6.png"> If you prefer, download the <a href="https://github.com/mlumeau/workshop-kmp/blob/step_four_remoterepository/iosApp/kosmos/kosmos/Base.lproj/Main.storyboard" target="_blank">storyboard from the next step</a>.</p>
+<p>If you are familiar with Storyboard, add the progressbar, UIImageView and another textview for description in the MainView (see picture below) and add references to the MainViewController.</p>
+<p class="image-container"><img alt="image_caption" src="img/b4fb544c213212b6.png"></p>
+<p>If you prefer, download the <a href="https://github.com/mlumeau/workshop-kmp/blob/step_four_remoterepository/iosApp/kosmos/kosmos/Base.lproj/Main.storyboard" target="_blank">storyboard from the next step</a>.</p>
 <p>And then update the <code>MainViewController</code> code...</p>
 <pre><code>import UIKit
 import Nuke
@@ -648,6 +654,8 @@ class APODViewModel(
     }
 }
 </code></pre>
+<aside class="special"><p>Again notice that the getAPOD completion callback will be called from a background thread. However using the MutableLiveData&#39;s <code>postValue()</code> method insure that the value will be updated in the main thread.</p>
+</aside>
 <p>Add a factory : <code>.../viewmodels/APODViewModelFactory.kt</code></p>
 <pre><code>package xyz.mlumeau.kosmos.viewmodels
 
@@ -684,6 +692,8 @@ class MainActivity : AppCompatActivity() {
         model.apod.observe(this, Observer { apod -&gt; updateAPODData(apod) })
     }
 </code></pre>
+<aside class="special"><p>As the apod value is posted by the ViewModel on main thread, we can then remove the <code>runOnUiThread</code> from the <code>updateAPODData</code> method.</p>
+</aside>
 <p>The function getApod() can be removed.</p>
 <p>Run it to validate the new architecture.</p>
 <h3 is-upgraded>For Mac users :</h3>
